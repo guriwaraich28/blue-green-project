@@ -2,7 +2,16 @@ pipeline {
     agent any
 
     parameters {
-    string(name: 'IMAGE_TAG', defaultValue: '', description: 'Enter image tag to deploy (leave empty for latest build)')
+        choice(
+            name: 'ACTIVE_ENV',
+            choices: ['blue', 'green'],
+            description: 'Select which environment should receive traffic'
+        )
+        string(
+            name: 'IMAGE_TAG',
+            defaultValue: '',
+            description: 'Enter image tag to deploy (leave empty for latest build)'
+        )
     }
 
     environment {
@@ -49,11 +58,12 @@ pipeline {
             steps {
                 dir('terraform') {
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
-                        sh '''
+                        sh """
                         terraform init
                         terraform apply -auto-approve \
-                        -var="image_tag=${IMAGE_TAG}"
-                        '''
+                        -var="image_tag=${IMAGE_TAG}" \
+                        -var="active_environment=${params.ACTIVE_ENV}"
+                        """
                     }
                 }
             }
