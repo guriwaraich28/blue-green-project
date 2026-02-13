@@ -14,7 +14,7 @@ resource "aws_instance" "blue" {
               systemctl start docker
               systemctl enable docker
 
-              docker pull guriwaraich/flask-crud:v1
+              docker pull guriwaraich/flask-crud:${var.image_tag}
 
               docker run -d -p 5000:5000 \
                 -e DB_HOST=${aws_db_instance.postgres.address} \
@@ -22,7 +22,7 @@ resource "aws_instance" "blue" {
                 -e DB_USER=postgres \
                 -e DB_PASSWORD=postgres123 \
                 --restart always \
-                guriwaraich/flask-crud:v1
+                guriwaraich/flask-crud:${var.image_tag}
               EOF
 
   tags = {

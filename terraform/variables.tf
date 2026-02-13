@@ -3,3 +3,7 @@ variable "active_environment" {
   type        = string
   default     = "blue"
 }
+variable "image_tag" {
+  description = "Docker image tag from Jenkins build"
+  type        = string
+}
