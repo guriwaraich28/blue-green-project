@@ -1,9 +1,13 @@
 pipeline {
     agent any
 
+    parameters {
+    string(name: 'IMAGE_TAG', defaultValue: '', description: 'Enter image tag to deploy (leave empty for latest build)')
+    }
+
     environment {
         DOCKER_IMAGE = "guriwaraich/flask-crud"
-        IMAGE_TAG = "${BUILD_NUMBER}"
+        IMAGE_TAG = "${params.IMAGE_TAG ?: BUILD_NUMBER}"
         AWS_DEFAULT_REGION = "us-east-1"
     }
 
